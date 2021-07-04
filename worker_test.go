@@ -28,12 +28,6 @@ func TestWorkerRegisterTask(t *testing.T) {
 		registeredTask interface{}
 	}{
 		{
-			name:           "register task with redis broker/backend",
-			broker:         redisBroker,
-			backend:        redisBackend,
-			registeredTask: add,
-		},
-		{
 			name:           "register task with amqp broker/backend",
 			broker:         amqpBroker,
 			backend:        amqpBackend,
@@ -62,12 +56,6 @@ func TestWorkerRunTask(t *testing.T) {
 		backend        CeleryBackend
 		registeredTask interface{}
 	}{
-		{
-			name:           "run task with redis broker/backend",
-			broker:         redisBroker,
-			backend:        redisBackend,
-			registeredTask: add,
-		},
 		{
 			name:           "run task with amqp broker/backend",
 			broker:         amqpBroker,
@@ -115,13 +103,6 @@ func TestWorkerExpiredTask(t *testing.T) {
 		registeredTask interface{}
 	}{
 		{
-			name:           "run expired task with redis broker/backend",
-			broker:         redisBroker,
-			backend:        redisBackend,
-			expires:        &now,
-			registeredTask: add,
-		},
-		{
 			name:           "run expired task with amqp broker/backend",
 			broker:         amqpBroker,
 			backend:        amqpBackend,
@@ -160,11 +141,6 @@ func TestWorkerNumWorkers(t *testing.T) {
 		backend CeleryBackend
 	}{
 		{
-			name:    "ensure correct number of workers with redis broker/backend",
-			broker:  redisBroker,
-			backend: redisBackend,
-		},
-		{
 			name:    "ensure correct number of workers with amqp broker/backend",
 			broker:  amqpBroker,
 			backend: amqpBackend,
@@ -189,11 +165,6 @@ func TestWorkerStartStop(t *testing.T) {
 		broker  CeleryBroker
 		backend CeleryBackend
 	}{
-		{
-			name:    "start and gracefully stop workers with redis broker/backend",
-			broker:  redisBroker,
-			backend: redisBackend,
-		},
 		{
 			name:    "start and gracefully stop workers with amqp broker/backend",
 			broker:  amqpBroker,

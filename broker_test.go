@@ -30,10 +30,6 @@ func TestBrokerRedisSend(t *testing.T) {
 		broker *RedisCeleryBroker
 	}{
 		{
-			name:   "send task to redis broker",
-			broker: redisBroker,
-		},
-		{
 			name:   "send task to redis broker with connection",
 			broker: redisBrokerWithConn,
 		},
@@ -84,10 +80,6 @@ func TestBrokerRedisGet(t *testing.T) {
 		broker *RedisCeleryBroker
 	}{
 		{
-			name:   "get task from redis broker",
-			broker: redisBroker,
-		},
-		{
 			name:   "get task from redis broker with connection",
 			broker: redisBrokerWithConn,
 		},
@@ -131,10 +123,6 @@ func TestBrokerSendGet(t *testing.T) {
 		name   string
 		broker CeleryBroker
 	}{
-		{
-			name:   "send/get task for redis broker",
-			broker: redisBroker,
-		},
 		{
 			name:   "send/get task for redis broker with connection",
 			broker: redisBrokerWithConn,

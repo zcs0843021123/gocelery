@@ -21,10 +21,6 @@ func TestBackendRedisGetResult(t *testing.T) {
 		backend *RedisCeleryBackend
 	}{
 		{
-			name:    "get result from redis backend",
-			backend: redisBackend,
-		},
-		{
 			name:    "get result from redis backend with connection",
 			backend: redisBackendWithConn,
 		},
@@ -67,10 +63,6 @@ func TestBackendRedisSetResult(t *testing.T) {
 		name    string
 		backend *RedisCeleryBackend
 	}{
-		{
-			name:    "set result to redis backend",
-			backend: redisBackend,
-		},
 		{
 			name:    "set result to redis backend with connection",
 			backend: redisBackendWithConn,
@@ -119,10 +111,6 @@ func TestBackendSetGetResult(t *testing.T) {
 		name    string
 		backend CeleryBackend
 	}{
-		{
-			name:    "set/get result to redis backend",
-			backend: redisBackend,
-		},
 		{
 			name:    "set/get result to redis backend with connection",
 			backend: redisBackendWithConn,

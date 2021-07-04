@@ -24,16 +24,6 @@ func NewRedisBackend(conn *redis.Pool) *RedisCeleryBackend {
 	}
 }
 
-// NewRedisCeleryBackend creates new RedisCeleryBackend
-//
-// Deprecated: NewRedisCeleryBackend exists for historical compatibility
-// and should not be used. Pool should be initialized outside of gocelery package.
-func NewRedisCeleryBackend(uri string) *RedisCeleryBackend {
-	return &RedisCeleryBackend{
-		Pool: NewRedisPool(uri),
-	}
-}
-
 // GetResult queries redis backend to get asynchronous result
 func (cb *RedisCeleryBackend) GetResult(taskID string) (*ResultMessage, error) {
 	conn := cb.Get()
