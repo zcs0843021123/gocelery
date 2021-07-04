@@ -7,6 +7,7 @@ package gocelery
 import (
 	"encoding/base64"
 	"encoding/json"
+	"github.com/gocelery/gocelery/utils"
 	"log"
 	"reflect"
 	"sync"
@@ -55,13 +56,13 @@ var celeryMessagePool = sync.Pool{
 	},
 }
 
-func getCeleryMessage(encodedTaskMessage string) *CeleryMessage {
+func GetCeleryMessage(encodedTaskMessage string) *CeleryMessage {
 	msg := celeryMessagePool.Get().(*CeleryMessage)
 	msg.Body = encodedTaskMessage
 	return msg
 }
 
-func releaseCeleryMessage(v *CeleryMessage) {
+func ReleaseCeleryMessage(v *CeleryMessage) {
 	v.reset()
 	celeryMessagePool.Put(v)
 }
@@ -139,7 +140,7 @@ var taskMessagePool = sync.Pool{
 	},
 }
 
-func getTaskMessage(task string) *TaskMessage {
+func GetTaskMessage(task string) *TaskMessage {
 	msg := taskMessagePool.Get().(*TaskMessage)
 	msg.Task = task
 	msg.Args = make([]interface{}, 0)
@@ -148,7 +149,7 @@ func getTaskMessage(task string) *TaskMessage {
 	return msg
 }
 
-func releaseTaskMessage(v *TaskMessage) {
+func ReleaseTaskMessage(v *TaskMessage) {
 	v.reset()
 	taskMessagePool.Put(v)
 }
@@ -209,13 +210,13 @@ func getResultMessage(val interface{}) *ResultMessage {
 	return msg
 }
 
-func getReflectionResultMessage(val *reflect.Value) *ResultMessage {
+func GetReflectionResultMessage(val *reflect.Value) *ResultMessage {
 	msg := resultMessagePool.Get().(*ResultMessage)
-	msg.Result = GetRealValue(val)
+	msg.Result = utils.GetRealValue(val)
 	return msg
 }
 
-func releaseResultMessage(v *ResultMessage) {
+func ReleaseResultMessage(v *ResultMessage) {
 	v.reset()
 	resultMessagePool.Put(v)
 }

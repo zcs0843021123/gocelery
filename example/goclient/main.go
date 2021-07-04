@@ -5,6 +5,8 @@
 package main
 
 import (
+	"github.com/gocelery/gocelery/backend"
+	"github.com/gocelery/gocelery/broker"
 	"log"
 	"math/rand"
 	"reflect"
@@ -38,8 +40,8 @@ func main() {
 
 	// initialize celery client
 	cli, _ := gocelery.NewCeleryClient(
-		gocelery.NewRedisBroker(redisPool),
-		&gocelery.RedisCeleryBackend{Pool: redisPool},
+		broker.NewRedisBroker(redisPool),
+		&backend.RedisCeleryBackend{Pool: redisPool},
 		1,
 	)
 

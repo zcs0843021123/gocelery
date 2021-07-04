@@ -6,6 +6,8 @@ package gocelery
 
 import (
 	"fmt"
+	"github.com/gocelery/gocelery/backend"
+	"github.com/gocelery/gocelery/broker"
 	"reflect"
 	"strconv"
 	"testing"
@@ -27,10 +29,10 @@ var (
 			return c, err
 		},
 	}
-	redisBrokerWithConn  = NewRedisBroker(redisPool)
-	redisBackendWithConn = NewRedisBackend(redisPool)
-	amqpBroker           = NewAMQPCeleryBroker("amqp://")
-	amqpBackend          = NewAMQPCeleryBackend("amqp://")
+	RedisBrokerWithConn  = broker.NewRedisBroker(redisPool)
+	RedisBackendWithConn = backend.NewRedisBackend(redisPool)
+	amqpBroker           = broker.NewAMQPCeleryBroker("amqp://")
+	amqpBackend          = backend.NewAMQPCeleryBackend("amqp://")
 )
 
 // TestNoArg tests successful function execution
@@ -92,8 +94,8 @@ func TestInteger(t *testing.T) {
 	}{
 		{
 			name:     "integer addition with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: addInt,
 			inA:      2485,
@@ -150,8 +152,8 @@ func TestIntegerNamedArguments(t *testing.T) {
 	}{
 		{
 			name:     "integer addition (named arguments) with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: &addIntTask{},
 			inA:      2485,
@@ -214,8 +216,8 @@ func TestString(t *testing.T) {
 	}{
 		{
 			name:     "string addition with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: addStr,
 			inA:      "hello",
@@ -271,8 +273,8 @@ func TestStringNamedArguments(t *testing.T) {
 	}{
 		{
 			name:     "string addition (named arguments) with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: &addStrTask{},
 			inA:      "hello",
@@ -334,8 +336,8 @@ func TestStringInteger(t *testing.T) {
 	}{
 		{
 			name:     "integer and string concatenation with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: addStrInt,
 			inA:      "hello",
@@ -391,8 +393,8 @@ func TestStringIntegerNamedArguments(t *testing.T) {
 	}{
 		{
 			name:     "integer and string concatenation (named arguments) with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: &addStrIntTask{},
 			inA:      "hello",
@@ -454,8 +456,8 @@ func TestFloat(t *testing.T) {
 	}{
 		{
 			name:     "float addition with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: addFloat,
 			inA:      3.4580,
@@ -511,8 +513,8 @@ func TestFloatNamedArguments(t *testing.T) {
 	}{
 		{
 			name:     "float addition with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: &addFloatTask{},
 			inA:      3.4580,
@@ -576,8 +578,8 @@ func TestFloat32(t *testing.T) {
 	}{
 		{
 			name:     "float32 addition with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: addFloat32,
 			inA:      3.4580,
@@ -635,8 +637,8 @@ func TestFloat32NamedArguments(t *testing.T) {
 	}{
 		{
 			name:     "float32 addition with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: &addFloat32Task{},
 			inA:      3.4580,
@@ -698,8 +700,8 @@ func TestBool(t *testing.T) {
 	}{
 		{
 			name:     "boolean and operation with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: andBool,
 			inA:      true,
@@ -755,8 +757,8 @@ func TestBoolNamedArguments(t *testing.T) {
 	}{
 		{
 			name:     "boolean and operation (named arguments) with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: &andBoolTask{},
 			inA:      true,
@@ -818,8 +820,8 @@ func TestArrayIntNamedArguments(t *testing.T) {
 	}{
 		{
 			name:     "maximum array length (named arguments) with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: &maxArrLenTask{},
 			inA:      []string{"a", "b", "c", "d"},
@@ -881,8 +883,8 @@ func TestArray(t *testing.T) {
 	}{
 		{
 			name:     "array addition with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: addArr,
 			inA:      []string{"a", "b", "c", "d"},
@@ -938,8 +940,8 @@ func TestMap(t *testing.T) {
 	}{
 		{
 			name:     "integer addition with redis broker/backend with connection",
-			broker:   redisBrokerWithConn,
-			backend:  redisBackendWithConn,
+			broker:   RedisBrokerWithConn,
+			backend:  RedisBackendWithConn,
 			taskName: uuid.Must(uuid.NewV4()).String(),
 			taskFunc: addMap,
 			inA:      map[string]string{"a": "a"},

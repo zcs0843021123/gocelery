@@ -2,11 +2,12 @@
 // This file is part of gocelery which is released under MIT license.
 // See file LICENSE for full license details.
 
-package gocelery
+package backend
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gocelery/gocelery"
 
 	"github.com/gomodule/redigo/redis"
 )
@@ -25,7 +26,7 @@ func NewRedisBackend(conn *redis.Pool) *RedisCeleryBackend {
 }
 
 // GetResult queries redis backend to get asynchronous result
-func (cb *RedisCeleryBackend) GetResult(taskID string) (*ResultMessage, error) {
+func (cb *RedisCeleryBackend) GetResult(taskID string) (*gocelery.ResultMessage, error) {
 	conn := cb.Get()
 	defer conn.Close()
 	val, err := conn.Do("GET", fmt.Sprintf("celery-task-meta-%s", taskID))
@@ -35,7 +36,7 @@ func (cb *RedisCeleryBackend) GetResult(taskID string) (*ResultMessage, error) {
 	if val == nil {
 		return nil, fmt.Errorf("result not available")
 	}
-	var resultMessage ResultMessage
+	var resultMessage gocelery.ResultMessage
 	err = json.Unmarshal(val.([]byte), &resultMessage)
 	if err != nil {
 		return nil, err
@@ -44,7 +45,7 @@ func (cb *RedisCeleryBackend) GetResult(taskID string) (*ResultMessage, error) {
 }
 
 // SetResult pushes result back into redis backend
-func (cb *RedisCeleryBackend) SetResult(taskID string, result *ResultMessage) error {
+func (cb *RedisCeleryBackend) SetResult(taskID string, result *gocelery.ResultMessage) error {
 	resBytes, err := json.Marshal(result)
 	if err != nil {
 		return err

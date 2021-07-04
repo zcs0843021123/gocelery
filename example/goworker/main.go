@@ -6,6 +6,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/gocelery/gocelery/backend"
+	"github.com/gocelery/gocelery/broker"
 	"time"
 
 	"github.com/gocelery/gocelery"
@@ -68,8 +70,8 @@ func main() {
 
 	// initialize celery client
 	cli, _ := gocelery.NewCeleryClient(
-		gocelery.NewRedisBroker(redisPool),
-		&gocelery.RedisCeleryBackend{Pool: redisPool},
+		broker.NewRedisBroker(redisPool),
+		&backend.RedisCeleryBackend{Pool: redisPool},
 		5, // number of workers
 	)
 

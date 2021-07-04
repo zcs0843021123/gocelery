@@ -2,7 +2,7 @@
 // This file is part of gocelery which is released under MIT license.
 // See file LICENSE for full license details.
 
-package gocelery
+package service
 
 import (
 	"log"
@@ -10,8 +10,22 @@ import (
 	"github.com/streadway/amqp"
 )
 
-// deliveryAck acknowledges delivery message with retries on error
-func deliveryAck(delivery amqp.Delivery) {
+// NewAMQPConnection creates new AMQP channel
+func NewAMQPConnection(host string) (*amqp.Connection, *amqp.Channel) {
+	connection, err := amqp.Dial(host)
+	if err != nil {
+		panic(err)
+	}
+
+	channel, err := connection.Channel()
+	if err != nil {
+		panic(err)
+	}
+	return connection, channel
+}
+
+// DeliveryAck acknowledges delivery message with retries on error
+func DeliveryAck(delivery amqp.Delivery) {
 	var err error
 	for retryCount := 3; retryCount > 0; retryCount-- {
 		if err = delivery.Ack(false); err == nil {
@@ -22,3 +36,4 @@ func deliveryAck(delivery amqp.Delivery) {
 		log.Printf("amqp_backend: failed to acknowledge result message %+v: %+v", delivery.MessageId, err)
 	}
 }
+

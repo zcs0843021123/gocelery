@@ -2,10 +2,12 @@
 // This file is part of gocelery which is released under MIT license.
 // See file LICENSE for full license details.
 
-package gocelery
+package backend
 
 import (
 	"encoding/json"
+	"github.com/gocelery/gocelery"
+	"github.com/gocelery/gocelery/service"
 	"strings"
 	"time"
 
@@ -21,7 +23,7 @@ type AMQPCeleryBackend struct {
 
 // NewAMQPCeleryBackend creates new AMQPCeleryBackend
 func NewAMQPCeleryBackend(host string) *AMQPCeleryBackend {
-	backend := NewAMQPCeleryBackendByConnAndChannel(NewAMQPConnection(host))
+	backend := NewAMQPCeleryBackendByConnAndChannel(service.NewAMQPConnection(host))
 	backend.Host = host
 	return backend
 }
@@ -38,13 +40,13 @@ func NewAMQPCeleryBackendByConnAndChannel(conn *amqp.Connection, channel *amqp.C
 // Reconnect reconnects to AMQP server
 func (b *AMQPCeleryBackend) Reconnect() {
 	b.Connection.Close()
-	conn, channel := NewAMQPConnection(b.Host)
+	conn, channel := service.NewAMQPConnection(b.Host)
 	b.Channel = channel
 	b.Connection = conn
 }
 
 // GetResult retrieves result from AMQP queue
-func (b *AMQPCeleryBackend) GetResult(taskID string) (*ResultMessage, error) {
+func (b *AMQPCeleryBackend) GetResult(taskID string) (*gocelery.ResultMessage, error) {
 
 	queueName := strings.Replace(taskID, "-", "", -1)
 
@@ -81,10 +83,10 @@ func (b *AMQPCeleryBackend) GetResult(taskID string) (*ResultMessage, error) {
 		return nil, err
 	}
 
-	var resultMessage ResultMessage
+	var resultMessage gocelery.ResultMessage
 
 	delivery := <-channel
-	deliveryAck(delivery)
+	service.DeliveryAck(delivery)
 	if err := json.Unmarshal(delivery.Body, &resultMessage); err != nil {
 		return nil, err
 	}
@@ -92,7 +94,7 @@ func (b *AMQPCeleryBackend) GetResult(taskID string) (*ResultMessage, error) {
 }
 
 // SetResult sets result back to AMQP queue
-func (b *AMQPCeleryBackend) SetResult(taskID string, result *ResultMessage) error {
+func (b *AMQPCeleryBackend) SetResult(taskID string, result *gocelery.ResultMessage) error {
 
 	result.ID = taskID
 

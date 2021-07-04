@@ -2,7 +2,7 @@
 // This file is part of gocelery which is released under MIT license.
 // See file LICENSE for full license details.
 
-package gocelery
+package utils
 
 import (
 	"reflect"

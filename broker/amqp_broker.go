@@ -2,11 +2,13 @@
 // This file is part of gocelery which is released under MIT license.
 // See file LICENSE for full license details.
 
-package gocelery
+package broker
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gocelery/gocelery"
+	"github.com/gocelery/gocelery/service"
 	"time"
 
 	"github.com/streadway/amqp"
@@ -56,23 +58,11 @@ type AMQPCeleryBroker struct {
 	Rate             int
 }
 
-// NewAMQPConnection creates new AMQP channel
-func NewAMQPConnection(host string) (*amqp.Connection, *amqp.Channel) {
-	connection, err := amqp.Dial(host)
-	if err != nil {
-		panic(err)
-	}
 
-	channel, err := connection.Channel()
-	if err != nil {
-		panic(err)
-	}
-	return connection, channel
-}
 
 // NewAMQPCeleryBroker creates new AMQPCeleryBroker
 func NewAMQPCeleryBroker(host string) *AMQPCeleryBroker {
-	return NewAMQPCeleryBrokerByConnAndChannel(NewAMQPConnection(host))
+	return NewAMQPCeleryBrokerByConnAndChannel(service.NewAMQPConnection(host))
 }
 
 // NewAMQPCeleryBrokerByConnAndChannel creates new AMQPCeleryBroker using AMQP conn and channel
@@ -110,7 +100,7 @@ func (b *AMQPCeleryBroker) StartConsumingChannel() error {
 }
 
 // SendCeleryMessage sends CeleryMessage to broker
-func (b *AMQPCeleryBroker) SendCeleryMessage(message *CeleryMessage) error {
+func (b *AMQPCeleryBroker) SendCeleryMessage(message *gocelery.CeleryMessage) error {
 	taskMessage := message.GetTaskMessage()
 	queueName := "celery"
 	_, err := b.QueueDeclare(
@@ -159,11 +149,11 @@ func (b *AMQPCeleryBroker) SendCeleryMessage(message *CeleryMessage) error {
 }
 
 // GetTaskMessage retrieves task message from AMQP queue
-func (b *AMQPCeleryBroker) GetTaskMessage() (*TaskMessage, error) {
+func (b *AMQPCeleryBroker) GetTaskMessage() (*gocelery.TaskMessage, error) {
 	select {
 	case delivery := <-b.consumingChannel:
-		deliveryAck(delivery)
-		var taskMessage TaskMessage
+		service.DeliveryAck(delivery)
+		var taskMessage gocelery.TaskMessage
 		if err := json.Unmarshal(delivery.Body, &taskMessage); err != nil {
 			return nil, err
 		}

@@ -2,10 +2,13 @@
 // This file is part of gocelery which is released under MIT license.
 // See file LICENSE for full license details.
 
-package gocelery
+package example
 
 import (
 	"fmt"
+	"github.com/gocelery/gocelery"
+	"github.com/gocelery/gocelery/backend"
+	"github.com/gocelery/gocelery/broker"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
@@ -59,9 +62,9 @@ func Example_workerWithNamedArguments() {
 	}
 
 	// initialize celery client
-	cli, _ := NewCeleryClient(
-		NewRedisBroker(redisPool),
-		&RedisCeleryBackend{Pool: redisPool},
+	cli, _ := gocelery.NewCeleryClient(
+		broker.NewRedisBroker(redisPool),
+		&backend.RedisCeleryBackend{Pool: redisPool},
 		5, // number of workers
 	)
 
